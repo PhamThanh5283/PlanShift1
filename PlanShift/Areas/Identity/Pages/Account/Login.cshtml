@@ -1,0 +1,51 @@
+﻿@page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Log in";
+}
+<section class="card vh-100" style="background-image:url(/imgs/Picture2.png)">
+    <div class="container-fluid vh-100" style="background-image: url('~/imgs/Picture2.png');">
+        <div class="row main-content bg-success text-center">
+            <div class="col-md-4 text-center company__info">
+                <span class="company__logo"><span class="fa fa-android"><img src="~/imgs/art-symbol-rgb-full-color.jpg" style="mix-blend-mode:darken" /></span></span>
+                <h4 class="company_title">Medtronic</h4>
+            </div>
+            <div class="col-md-8 col-xs-12 col-sm-12 login_form ">
+                <div class="container-fluid">
+                    <div class="row center">
+                        <img src="~/imgs/art-logo-rgb-bl.jpg" style="mix-blend-mode: darken" />
+                    </div>
+                    <div class="row">
+                        <form control="" class="form-group" id="account" method="post">
+                            <div asp-validation-summary="ModelOnly" class="text-danger lblR" role="alert"></div>
+                            <div class="row">
+                                <input asp-for="Input.Email" class="form__input" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                                <span asp-validation-for="Input.Email" class="text-danger lblR"></span>
+                            </div>
+                            <div class="row">
+                                <!-- <span class="fa fa-lock"></span> -->
+                                <input asp-for="Input.Password" class="form__input" autocomplete="current-password" aria-required="true" placeholder="password" />
+                                <span asp-validation-for="Input.Password" class="text-danger lblR"></span>
+                            </div>
+                            <div class="row-1">
+                                <input type="checkbox" name="remember_me" id="remember_me" class="form-check-input">
+                                <label for="remember_me" class="lblR">Remember Me!</label>
+                            </div>
+                            <div class="row-1">
+                                <input type="submit" value="Submit" class="btn btn_login">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="row">
+                        <p class="lblR">Don't have an account? <a href="/Identity/Account/Register">Register Here</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <link href="~/css/login.css" rel="stylesheet" />
+}

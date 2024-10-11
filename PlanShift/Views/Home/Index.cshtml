@@ -1,0 +1,185 @@
+﻿@model MultiModels
+@{
+    ViewData["Title"] = "Home Page";
+}
+<section class="background-radial-gradient overflow-hidden">
+    <div class="container">
+        <div class="card-body">
+            <div class="card text-center" style="box-shadow:0 10px 6px -6px #999">
+                <div class="card-header">
+                    <h4><b>SHIFT PLANNING TABLE</b></h4>
+                </div>
+                <div class="card-body">
+                    <form action="/Home/Register" method="post" class="was-validated">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="card" style="height:50px;border-color:burlywood">
+                                    <div class="card-body">
+                                        <select class="selectpicker form-control" multiple data-live-search="true" id="drop1" name="_PlanShift" style="font-weight:bold" aria-label="Default select example" required>
+                                            @if (Model.TimeShifts.Count() > 0)
+                                            {
+                                                foreach (var items1 in Model.TimeShifts)
+                                                {
+                                                    <option value=@items1.PlanShift>@items1.PlanShift</option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md">
+                                <div class="card" style="height:50px;border-color:burlywood">
+                                    <div class="card-body">
+                                        <div class="row g-3 align-items-center">
+                                            <div class="col-md-2"><span style="font-weight:bold" class="badge rounded-pill bg-primary lblR">Date Picker :</span></div>
+                                            <div class="col-md">
+                                                <div class="input-group">
+                                                    <input id="Startdate" placeholder="Start date" name="SDate" style="font-size:small;color:brown" width="220" required />
+                                                </div>
+                                            </div>
+                                            <div class="col-md">
+                                                <div class="input-group">
+                                                    <input id="Enddate" name="EDate" placeholder="End date" style="font-size:small;color:brown" width="220" required />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="rows">
+                            <div class="card">
+                                <div class="card-body">
+                                    <table id="Mtbl" class="table table-bodered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th style="text-align:center" scope="col">Select</th>
+                                                <th style="text-align:center" scope="col">Plan Date</th>
+                                                <th style="text-align:center" scope="col">Actual Date</th>
+                                                <th style="text-align:center" scope="col">Plan Shift</th>
+                                                <th style="text-align:center" scope="col">Start Time</th>
+                                                <th style="text-align:center" scope="col">End Time</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (Model.planShifts.Count() > 0)
+                                            {
+                                                foreach (var items2 in Model.planShifts)
+                                                {
+                                                    <tr>
+                                                        <td style="text-align:center">
+                                                            <input class="form-check-input" type="checkbox" id="flexCheckDefault" />
+                                                        </td>
+                                                        <th scope="row">@String.Format("{0:dd-MM-yyyy}",items2.PlanDate)</th>
+                                                        <td>@String.Format("{0:dd-MM-yyyy}",items2.ActualDate)</td>
+                                                        <td class="planshift">@items2.PlanShift1</td>
+                                                        <td>@items2.StartTime</td>
+                                                        <td>@items2.EndTime</td>
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <hr />
+                        <button class="btn btn-primary" id="btnAdd" type="submit" asp-action="Register">Register Shift</button>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        @*<button type="submit" id="btn_del" class="btn btn-danger" asp-action="Delete">Delete Shift</button>*@
+                        <a class="btn btn-danger" id="btn_del" href="javascript:void(0);">Delete Shifts</a>
+                    </form>
+                </div>
+                <div class="card-footer">
+                    <img src="~/imgs/art-logo-tag-h-en-rgb-k.png" width="250" />
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div id="bg">
+    <canvas></canvas>
+    <canvas></canvas>
+    <canvas></canvas>
+</div>
+
+<script>
+    //$('#Startdate').datepicker({
+    //    uiLibrary: 'bootstrap5'
+    //});
+    //$('#Enddate').datepicker({
+    //    uiLibrary: 'bootstrap5'
+    //});
+    $('#Startdate').datepicker();
+    $('#Enddate').datepicker();
+</script>
+<script type="text/javascript">
+    var myReg = '@TempData["Reg"]'
+    var cdate = '@TempData["Checkdate"]'
+    var del = '@TempData["Del"]'
+    $(document).ready(function () {
+        if (myReg == "Success") {
+            toastr["success"]("Register successfully !")
+        }
+        if (myReg == "Fail") {
+            toastr["error"]("The Shift has been registered !")
+        }
+        if (cdate == "True")
+        {
+            toastr["error"]("End date should be greater than Start date !")
+        }
+        if (del == "Success") {
+            toastr["success"]("Successfully deleted data !")
+        }
+    });
+</script>
+
+@section scripts {
+    <link href="~/css/index-eff.css" rel="stylesheet" />
+    <script src="~/js/index.js"></script>
+    <script type="text/javascript">
+        //var js = jQuery.noConflict(true)
+        $(document).ready(function () {
+            $('#Mtbl').prepend($("<thead></thead>").append($(this).find("tr:first"))).dataTable();
+            $('select').selectpicker();
+        });
+    </script>
+    <script>
+        $('#btn_del').click(() => {
+            var selectedValues = [];
+            var rowcheck = []
+            var checkboxes = document.querySelectorAll('.form-check-input:checked');
+            checkboxes.forEach(function (checkbox) {
+                var row = checkbox.closest('tr');
+                var plandate = row.cells[1].textContent;
+                var planshift = row.cells[3].textContent;
+                rowcheck.push(row)
+                selectedValues.push({ plandate: plandate, planshift: planshift });
+            });
+            if (confirm("Do you want to delete rows selected?")) {
+                $.ajax({
+                    type: 'POST',
+                    url: '/Home/Delete',
+                    contentType: 'application/json',
+                    data: JSON.stringify(selectedValues),
+                    success: function (result) {
+                        rowcheck.forEach(function (cb){
+                            cb.remove();
+                        })
+                        console.log(result)
+                        toastr["success"]("Successfully deleted data !")
+                    },
+                    error: function (err) {
+                        if (err.responseText == 'Data null')
+                        {
+                            toastr["error"]("You must select checkbox to delete !", "Delete error")
+                        }
+                        console.log(err)
+                    }
+                });
+            }
+        });
+    </script>
+
+}

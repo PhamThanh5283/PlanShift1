@@ -1,0 +1,68 @@
+﻿@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<div class="row vh-100" style="background-color:whitesmoke">
+    <div class="card-body">
+        <div class="cont">
+            <div class="form sign-in">
+                <h2>Welcome</h2>
+
+                <button type="button" onclick="location.href='/identity/account/login'" class="submit">Sign In</button>
+            </div>
+            <div class="sub-cont">
+                <div class="img">
+                    <div class="img__text m--up">
+
+                        <h3>Don't have an account? Please Sign up!<h3>
+                    </div>
+                    <div class="img__text m--in">
+
+                        <h3>If you already has an account, just sign in.<h3>
+                    </div>
+                    <div class="img__btn">
+                        <span class="m--up">Sign Up</span>
+                        <span class="m--in">Sign In</span>
+                    </div>
+                </div>
+                <div class="form sign-up">
+                    <h2>Create your Account</h2>
+                    <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                        <center>
+                            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+                        </center>
+                        <label>
+                            <span>Email</span>
+                            <input asp-for="Input.Email" style="font-size:small" class="lblR" type="text" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                            <span asp-validation-for="Input.Email" class="text-danger"></span>
+                        </label>
+                        <label>
+                            <span>Password</span>
+                            <input asp-for="Input.Password" style="font-size:small" class="lblR" type="password" autocomplete="new-password" aria-required="true" placeholder="password" />
+                            <span asp-validation-for="Input.Password" class="text-danger"></span>
+                        </label>
+                        <label>
+                            <span>Confirm Password</span>
+                            <input asp-for="Input.ConfirmPassword" type="password" style="font-size:small" class="lblR" autocomplete="new-password" aria-required="true" placeholder="Confirm password" />
+                            <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                        </label>
+                        <button id="registerSubmit" type="submit" class="submit">Sign Up</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.querySelector('.img__btn').addEventListener('click', function () {
+            document.querySelector('.cont').classList.toggle('s--signup');
+        });
+    </script>
+</div>
+
+@section Scripts {
+    <link href="~/css/registerplan.css" rel="stylesheet" />
+
+}
